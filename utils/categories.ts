@@ -19,7 +19,7 @@ export type CategoryLabel =
   | "caravan"
   | "apartment"
   | "house"
-  | "single room"
+  | "single-room"
   | "lodge";
 
 export const categories: Category[] = [
@@ -49,7 +49,7 @@ export const categories: Category[] = [
   },
 
   {
-    label: "single room",
+    label: "single-room",
     icon: MdOutlineBedroomParent,
   },
   {
