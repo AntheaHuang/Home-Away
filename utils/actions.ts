@@ -240,11 +240,27 @@ export const toggleFavoriteAction = async (prevState: {
   }
 };
 
-export const fetchFavorites = async () => {
+export const fetchFavorites = async (search: string = "") => {
   const user = await getAuthUser();
   const favorites = await db.favorite.findMany({
     where: {
       profileId: user.id,
+      property: {
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+          {
+            tagline: {
+              contains: search,
+              mode: "insensitive",
+            },
+          },
+        ],
+      },
     },
     select: {
       property: {
