@@ -1,22 +1,32 @@
 "use client";
-import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { DateRange } from "react-day-picker";
+import { useProperty } from "@/utils/store";
+
+import {
+  generateDisabledDates,
+  generateDateRange,
+  defaultSelected,
+  generateBlockedPeriods,
+} from "@/utils/calendar";
 
 export default function BookingCalendar() {
   const currentDate = new Date();
-  const defaultSelected: DateRange = {
-    // To be implemented
-    from: undefined,
-    to: undefined,
-  };
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
+
+  useEffect(() => {
+    useProperty.setState({ range });
+  }, [range]);
+
   return (
     <Calendar
       mode="range"
       defaultMonth={currentDate}
       selected={range}
       onSelect={setRange}
+      className="mb-4"
     />
   );
 }
