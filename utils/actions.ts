@@ -703,3 +703,31 @@ export const fetchChartsData = async () => {
 
   return bookingsPerMonth;
 };
+
+export const fetchReservationStats = async () => {
+  const user = await getAuthUser();
+
+  const properties = await db.property.count({
+    where: {
+      profileId: user.id,
+    },
+  });
+
+  const totals = await db.booking.aggregate({
+    _sum: {
+      orderTotal: true,
+      totalNights: true,
+    },
+    where: {
+      paymentStatus: true,
+      property: {
+        profileId: user.id,
+      },
+    },
+  });
+  return {
+    properties,
+    nights: totals._sum.totalNights || 0,
+    amount: totals._sum.orderTotal || 0,
+  };
+};

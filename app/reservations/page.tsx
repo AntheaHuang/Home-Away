@@ -13,58 +13,62 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Stats from "@/components/reservation/Stats";
 
 export default async function ReservationsPage() {
   const reservations = await fetchReservations();
   if (reservations.length === 0) return <EmptyList />;
 
   return (
-    <div className="mt-16">
-      <h4 className="mb-4 capitalize">
-        total reservations : {reservations.length}
-      </h4>
-      <Table>
-        <TableCaption>Your recent reservations</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Property Name</TableHead>
-            <TableHead>Country</TableHead>
-            <TableHead>Nights</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>Check In</TableHead>
-            <TableHead>Check Out</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {reservations.map((reservation) => {
-            const { id, orderTotal, totalNights, checkIn, checkOut } =
-              reservation;
-            const { id: propertyId, name, country } = reservation.property;
+    <>
+      <Stats />
+      <div className="mt-16">
+        <h4 className="mb-4 capitalize">
+          total reservations : {reservations.length}
+        </h4>
+        <Table>
+          <TableCaption>Your recent reservations</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Property Name</TableHead>
+              <TableHead>Country</TableHead>
+              <TableHead>Nights</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead>Check In</TableHead>
+              <TableHead>Check Out</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {reservations.map((reservation) => {
+              const { id, orderTotal, totalNights, checkIn, checkOut } =
+                reservation;
+              const { id: propertyId, name, country } = reservation.property;
 
-            const startDate = formatDate(checkIn);
-            const endDate = formatDate(checkOut);
-            return (
-              <TableRow key={id}>
-                <TableCell>
-                  <Link
-                    href={`/properties/${propertyId}`}
-                    className="underline text-muted-foreground tracking-wide"
-                  >
-                    {name}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <CountryFlagAndName countryCode={country} />
-                </TableCell>
-                <TableCell>{totalNights}</TableCell>
-                <TableCell>{formatCurrency(orderTotal)}</TableCell>
-                <TableCell>{startDate}</TableCell>
-                <TableCell>{endDate}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+              const startDate = formatDate(checkIn);
+              const endDate = formatDate(checkOut);
+              return (
+                <TableRow key={id}>
+                  <TableCell>
+                    <Link
+                      href={`/properties/${propertyId}`}
+                      className="underline text-muted-foreground tracking-wide"
+                    >
+                      {name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <CountryFlagAndName countryCode={country} />
+                  </TableCell>
+                  <TableCell>{totalNights}</TableCell>
+                  <TableCell>{formatCurrency(orderTotal)}</TableCell>
+                  <TableCell>{startDate}</TableCell>
+                  <TableCell>{endDate}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 }
