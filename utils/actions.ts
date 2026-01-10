@@ -14,6 +14,7 @@ import { redirect } from "next/navigation";
 import { uploadImage } from "./supabase";
 import { calculateTotals } from "./calculateTotal";
 import { formatDate } from "./format";
+import { FormStateWithStatus } from "./types";
 
 const getAuthUser = async () => {
   const user = await currentUser();
@@ -24,9 +25,10 @@ const getAuthUser = async () => {
   return user;
 };
 
-const renderError = (error: unknown): { message: string } => {
+const renderError = (error: unknown): FormStateWithStatus => {
   return {
     message: error instanceof Error ? error.message : "There was an error...",
+    status: "error",
   };
 };
 
@@ -95,7 +97,7 @@ export const fetchProfile = async () => {
 export const updateProfileAction = async (
   prevState: any,
   formData: FormData
-): Promise<{ message: string }> => {
+): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
   try {
     const rawData = Object.fromEntries(formData);
@@ -108,7 +110,7 @@ export const updateProfileAction = async (
       data: validatedFields,
     });
     revalidatePath("/profile");
-    return { message: "Your profile has been updated!" };
+    return { message: "Your profile has been updated!", status: "success" };
   } catch (error) {
     return renderError(error);
   }
@@ -117,7 +119,7 @@ export const updateProfileAction = async (
 export const updateProfileImageAction = async (
   prevState: any,
   formData: FormData
-): Promise<{ message: string }> => {
+): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
 
   try {
@@ -134,7 +136,10 @@ export const updateProfileImageAction = async (
       },
     });
     revalidatePath("/profile");
-    return { message: "Profile image updated successfully!" };
+    return {
+      message: "Profile image updated successfully!",
+      status: "success",
+    };
   } catch (error) {
     return renderError(error);
   }
@@ -143,7 +148,7 @@ export const updateProfileImageAction = async (
 export const createPropertyAction = async (
   prevState: any,
   formData: FormData
-): Promise<{ message: string }> => {
+): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
 
   try {
@@ -222,7 +227,7 @@ export const toggleFavoriteAction = async (prevState: {
   propertyId: string;
   favoriteId: string | null;
   pathname: string;
-}) => {
+}): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
   const { propertyId, favoriteId, pathname } = prevState;
   try {
@@ -243,6 +248,7 @@ export const toggleFavoriteAction = async (prevState: {
     revalidatePath(pathname);
     return {
       message: favoriteId ? "Removed from Favorites" : "Added to Favorites",
+      status: "success",
     };
   } catch (error) {
     return renderError(error);
@@ -310,7 +316,7 @@ export const fetchPropertyDetails = (id: string) => {
 export const createReviewAction = async (
   prevState: any,
   formData: FormData
-) => {
+): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
   try {
     const rawData = Object.fromEntries(formData);
@@ -322,7 +328,7 @@ export const createReviewAction = async (
       },
     });
     // revalidatePath(`/properties/${validatedFields.propertyId}`);
-    return { message: "Review submitted successfully!" };
+    return { message: "Review submitted successfully!", status: "success" };
   } catch (error) {
     return renderError(error);
   }
@@ -372,7 +378,9 @@ export const fetchPropertyReviewsByUser = async () => {
   return reviews;
 };
 
-export const deleteReviewAction = async (prevState: { reviewId: string }) => {
+export const deleteReviewAction = async (prevState: {
+  reviewId: string;
+}): Promise<FormStateWithStatus> => {
   const { reviewId } = prevState;
   const user = await getAuthUser();
   try {
@@ -383,7 +391,7 @@ export const deleteReviewAction = async (prevState: { reviewId: string }) => {
       },
     });
     // revalidatePath("/reviews");
-    return { message: "Review deleted successfully" };
+    return { message: "Review deleted successfully", status: "success" };
   } catch (error) {
     return renderError(error);
   }
@@ -443,7 +451,7 @@ export const createBookingAction = async (prevState: {
     },
   });
   if (!property) {
-    return { message: "Property Not Found" };
+    return { message: "Property Not Found", status: "warning" };
   }
   const { orderTotal, totalNights } = calculateTotals({
     checkIn,
@@ -491,7 +499,9 @@ export const fetchBookings = async () => {
   return bookings;
 };
 
-export const deleteBookingAction = async (prevState: { bookingId: string }) => {
+export const deleteBookingAction = async (prevState: {
+  bookingId: string;
+}): Promise<FormStateWithStatus> => {
   const { bookingId } = prevState;
   const user = await getAuthUser();
   try {
@@ -502,7 +512,7 @@ export const deleteBookingAction = async (prevState: { bookingId: string }) => {
       },
     });
     // revalidatePath("/bookings");
-    return { message: "Booking delete successfully" };
+    return { message: "Booking deleted successfully", status: "success" };
   } catch (error) {
     return renderError(error);
   }
@@ -551,7 +561,9 @@ export const fetchRentals = async () => {
   return rentalsWithBookingsSums;
 };
 
-export const deleteRentalAction = async (prevState: { propertyId: string }) => {
+export const deleteRentalAction = async (prevState: {
+  propertyId: string;
+}): Promise<FormStateWithStatus> => {
   const { propertyId } = prevState;
   const user = await getAuthUser();
 
@@ -563,7 +575,7 @@ export const deleteRentalAction = async (prevState: { propertyId: string }) => {
       },
     });
     // revalidatePath("/rentals");
-    return { message: "Rental delete successfully" };
+    return { message: "Rental deleted successfully", status: "success" };
   } catch (error) {
     return renderError(error);
   }
@@ -582,7 +594,7 @@ export const fetchRentalDetails = async (propertyId: string) => {
 export const updatePropertyAction = async (
   prevState: any,
   formData: FormData
-): Promise<{ message: string }> => {
+): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
   const propertyId = formData.get("id") as string;
   try {
@@ -598,7 +610,7 @@ export const updatePropertyAction = async (
       },
     });
     revalidatePath(`/rentals/${propertyId}/edit`);
-    return { message: "Property Updated Successfully" };
+    return { message: "Property Updated Successfully", status: "success" };
   } catch (error) {
     return renderError(error);
   }
@@ -607,7 +619,7 @@ export const updatePropertyAction = async (
 export const updatePropertyImageAction = async (
   prevState: any,
   formData: FormData
-): Promise<{ message: string }> => {
+): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
   const propertyId = formData.get("id") as string;
   try {
@@ -624,7 +636,10 @@ export const updatePropertyImageAction = async (
       },
     });
     revalidatePath(`/rentals/${propertyId}/edit`);
-    return { message: "Property Image Updated Successfully" };
+    return {
+      message: "Property Image Updated Successfully",
+      status: "success",
+    };
   } catch (error) {
     return renderError(error);
   }

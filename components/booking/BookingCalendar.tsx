@@ -1,7 +1,7 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
 import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useProperty } from "@/utils/store";
 
 import {
@@ -17,8 +17,6 @@ export default function BookingCalendar() {
   const [range, setRange] = useState<DateRange | undefined>(defaultSelected);
   const bookings = useProperty((state) => state.bookings);
 
-  const { toast } = useToast();
-
   const blockedPeriods = generateBlockedPeriods({
     bookings,
     today: currentDate,
@@ -31,10 +29,7 @@ export default function BookingCalendar() {
     const isDisabledDateIncluded = selectedRange.some((date) => {
       if (unavailableDates[date]) {
         setRange(defaultSelected);
-        toast({
-          description:
-            "Please make sure to select date range that is available",
-        });
+        toast.info("Please make sure to select date range that is available");
         return true;
       }
       return false;

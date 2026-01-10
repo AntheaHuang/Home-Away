@@ -1,7 +1,14 @@
+export type ToastStatus = "success" | "info" | "error" | "warning";
+
+export type FormStateWithStatus = {
+  message: string;
+  status: ToastStatus;
+};
+
 export type actionFunction = (
   prevState: any,
   formData: FormData
-) => Promise<{ message: string }>;
+) => Promise<FormStateWithStatus>;
 
 export type PropertyCardProps = {
   image: string;
