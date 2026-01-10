@@ -41,7 +41,7 @@ export const getAdminUser = async () => {
 export const createProfileAction = async (
   prevState: any,
   formData: FormData
-) => {
+): Promise<FormStateWithStatus> => {
   try {
     const user = await currentUser();
     if (!user) throw new Error("Please login to create profile");
@@ -432,7 +432,7 @@ export const createBookingAction = async (prevState: {
   propertyId: string;
   checkIn: Date;
   checkOut: Date;
-}) => {
+}): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
   await db.booking.deleteMany({
     where: {
