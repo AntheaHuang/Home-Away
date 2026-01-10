@@ -18,7 +18,10 @@ export default function SubmitReview({ propertyId }: { propertyId: string }) {
       </Button>
       {isReviewVisible && (
         <Card className="p-8 mt-8">
-          <FormContainer action={createReviewAction}>
+          <FormContainer
+            action={createReviewAction}
+            refreshPath={`/properties/${propertyId}`}
+          >
             <input type="hidden" name="propertyId" value={propertyId} />
             <RatingInput name="rating" />
             <TextAreaInput

@@ -321,7 +321,7 @@ export const createReviewAction = async (
         profileId: user.id,
       },
     });
-    revalidatePath(`/properties/${validatedFields.propertyId}`);
+    // revalidatePath(`/properties/${validatedFields.propertyId}`);
     return { message: "Review submitted successfully!" };
   } catch (error) {
     return renderError(error);
@@ -382,7 +382,7 @@ export const deleteReviewAction = async (prevState: { reviewId: string }) => {
         profileId: user.id,
       },
     });
-    revalidatePath("/reviews");
+    // revalidatePath("/reviews");
     return { message: "Review deleted successfully" };
   } catch (error) {
     return renderError(error);
@@ -501,7 +501,7 @@ export const deleteBookingAction = async (prevState: { bookingId: string }) => {
         profileId: user.id,
       },
     });
-    revalidatePath("/bookings");
+    // revalidatePath("/bookings");
     return { message: "Booking delete successfully" };
   } catch (error) {
     return renderError(error);
@@ -562,7 +562,7 @@ export const deleteRentalAction = async (prevState: { propertyId: string }) => {
         profileId: user.id,
       },
     });
-    revalidatePath("/rentals");
+    // revalidatePath("/rentals");
     return { message: "Rental delete successfully" };
   } catch (error) {
     return renderError(error);
@@ -598,7 +598,7 @@ export const updatePropertyAction = async (
       },
     });
     revalidatePath(`/rentals/${propertyId}/edit`);
-    return { message: "Update Successfully" };
+    return { message: "Property Updated Successfully" };
   } catch (error) {
     return renderError(error);
   }
@@ -624,7 +624,7 @@ export const updatePropertyImageAction = async (
       },
     });
     revalidatePath(`/rentals/${propertyId}/edit`);
-    return { message: "Property Image Update Successfully" };
+    return { message: "Property Image Updated Successfully" };
   } catch (error) {
     return renderError(error);
   }

@@ -75,7 +75,7 @@ async function RentalsPage() {
 function DeleteRental({ propertyId }: { propertyId: string }) {
   const deleteRental = deleteRentalAction.bind(null, { propertyId });
   return (
-    <FormContainer action={deleteRental}>
+    <FormContainer action={deleteRental} refreshPath="/rentals">
       <IconButton actionType="delete" />
     </FormContainer>
   );

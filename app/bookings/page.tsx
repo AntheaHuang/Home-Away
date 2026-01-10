@@ -77,7 +77,7 @@ async function BookingsPage() {
 function DeleteBooking({ bookingId }: { bookingId: string }) {
   const deleteBooking = deleteBookingAction.bind(null, { bookingId });
   return (
-    <FormContainer action={deleteBooking}>
+    <FormContainer action={deleteBooking} refreshPath="/bookings">
       <IconButton actionType="delete" />
     </FormContainer>
   );
