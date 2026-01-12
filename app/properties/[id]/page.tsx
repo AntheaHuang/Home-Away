@@ -11,6 +11,7 @@ import PropertyReviews from "@/components/reviews/PropertyReviews";
 import SubmitReview from "@/components/reviews/SubmitReview";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchPropertyDetails, findExistingReview } from "@/utils/actions";
+import { Amenity } from "@/utils/amenities";
 import { auth } from "@clerk/nextjs/server";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import dynamic from "next/dynamic";
@@ -45,6 +46,8 @@ export default async function PropertyDetailsPage({
   const firstName = property.profile.firstName;
   const profileImage = property.profile.profileImage;
 
+  const propertyAmenities: Amenity[] = JSON.parse(property.amenities);
+
   const { userId } = auth();
   const isNotOwner = property.profile.clerkId !== userId;
   const reviewDoesNotExist =
@@ -71,7 +74,7 @@ export default async function PropertyDetailsPage({
           <UserInfo profile={{ firstName, profileImage }} />
           <Separator className="mt-4" />
           <Description description={property.description} />
-          <Amenities amenities={property.amenities} />
+          <Amenities propertyAmenities={propertyAmenities} />
           <DynamicMap countryCode={property.country} />
         </div>
         <div className="lg:col-span-4 flex flex-col items-center">
