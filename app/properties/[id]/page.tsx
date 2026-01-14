@@ -10,7 +10,11 @@ import UserInfo from "@/components/properties/UserInfo";
 import PropertyReviews from "@/components/reviews/PropertyReviews";
 import SubmitReview from "@/components/reviews/SubmitReview";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchPropertyDetails, findExistingReview } from "@/utils/actions";
+import {
+  checkIfUserHasBooking,
+  fetchPropertyDetails,
+  findExistingReview,
+} from "@/utils/actions";
 import { Amenity } from "@/utils/amenities";
 import { auth } from "@clerk/nextjs/server";
 import { Separator } from "@radix-ui/react-dropdown-menu";
@@ -49,9 +53,17 @@ export default async function PropertyDetailsPage({
   const propertyAmenities: Amenity[] = JSON.parse(property.amenities);
 
   const { userId } = auth();
+  // Check if current user is the property owner
   const isNotOwner = property.profile.clerkId !== userId;
+  // Check if current user has booked this property
+  const bookings = property.bookings;
+  const hasBooked = bookings.some(({ profileId }) => profileId === userId);
+
   const reviewDoesNotExist =
-    userId && isNotOwner && !(await findExistingReview(userId, property.id));
+    userId &&
+    isNotOwner &&
+    hasBooked &&
+    !(await findExistingReview(userId, property.id));
 
   return (
     <section>
