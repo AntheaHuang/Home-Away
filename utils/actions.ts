@@ -500,18 +500,6 @@ export const fetchBookings = async () => {
   return bookings;
 };
 
-export const checkIfUserHasBooking = async (userId: string) => {
-  const bookedPropertiesId = db.booking.findMany({
-    where: {
-      profileId: userId,
-    },
-    select: {
-      propertyId: true,
-    },
-  });
-  return bookedPropertiesId;
-};
-
 export const deleteBookingAction = async (prevState: {
   bookingId: string;
 }): Promise<FormStateWithStatus> => {

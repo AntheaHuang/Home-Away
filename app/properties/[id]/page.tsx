@@ -10,11 +10,7 @@ import UserInfo from "@/components/properties/UserInfo";
 import PropertyReviews from "@/components/reviews/PropertyReviews";
 import SubmitReview from "@/components/reviews/SubmitReview";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  checkIfUserHasBooking,
-  fetchPropertyDetails,
-  findExistingReview,
-} from "@/utils/actions";
+import { fetchPropertyDetails, findExistingReview } from "@/utils/actions";
 import { Amenity } from "@/utils/amenities";
 import { auth } from "@clerk/nextjs/server";
 import { Separator } from "@radix-ui/react-dropdown-menu";
