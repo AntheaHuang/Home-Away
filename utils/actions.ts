@@ -522,6 +522,25 @@ export const fetchBookings = async () => {
   return bookings;
 };
 
+export const hasPendingBooking = async () => {
+  const user = await getAuthUser();
+  // Delete expired bookings
+  await db.booking.deleteMany({
+    where: {
+      profileId: user.id,
+      paymentStatus: false,
+      expiresAt: { lt: new Date() },
+    },
+  });
+  const bookings = await db.booking.findMany({
+    where: {
+      profileId: user.id,
+      paymentStatus: false,
+    },
+  });
+  return bookings;
+};
+
 export const deleteBookingAction = async (prevState: {
   bookingId: string;
 }): Promise<FormStateWithStatus> => {
