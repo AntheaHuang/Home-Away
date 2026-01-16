@@ -494,10 +494,17 @@ export const createBookingAction = async (prevState: {
 
 export const fetchBookings = async () => {
   const user = await getAuthUser();
+  // Delete expired bookings
+  await db.booking.deleteMany({
+    where: {
+      profileId: user.id,
+      paymentStatus: false,
+      expiresAt: { lt: new Date() },
+    },
+  });
   const bookings = await db.booking.findMany({
     where: {
       profileId: user.id,
-      paymentStatus: true,
     },
     include: {
       property: {

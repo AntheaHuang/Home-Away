@@ -16,6 +16,7 @@ import {
 import FormContainer from "@/components/form/FormContainer";
 import { IconButton } from "@/components/form/Buttons";
 import { fetchBookings, deleteBookingAction } from "@/utils/actions";
+import BookingStatusCell from "@/components/booking/BookingStatusCell";
 
 async function BookingsPage() {
   const bookings = await fetchBookings();
@@ -34,6 +35,7 @@ async function BookingsPage() {
             <TableHead>Country</TableHead>
             <TableHead>Nights</TableHead>
             <TableHead>Total</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Check In</TableHead>
             <TableHead>Check Out</TableHead>
             <TableHead>Actions</TableHead>
@@ -41,7 +43,15 @@ async function BookingsPage() {
         </TableHeader>
         <TableBody>
           {bookings.map((booking) => {
-            const { id, orderTotal, totalNights, checkIn, checkOut } = booking;
+            const {
+              id,
+              orderTotal,
+              totalNights,
+              checkIn,
+              checkOut,
+              paymentStatus,
+              expiresAt,
+            } = booking;
             const { id: propertyId, name, country } = booking.property;
             const startDate = formatDate(checkIn);
             const endDate = formatDate(checkOut);
@@ -60,6 +70,11 @@ async function BookingsPage() {
                 </TableCell>
                 <TableCell>{totalNights}</TableCell>
                 <TableCell>{formatCurrency(orderTotal)}</TableCell>
+                <BookingStatusCell
+                  id={id}
+                  paymentStatus={paymentStatus}
+                  expiresAt={expiresAt}
+                />
                 <TableCell>{startDate}</TableCell>
                 <TableCell>{endDate}</TableCell>
                 <TableCell>
