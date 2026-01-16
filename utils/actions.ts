@@ -293,7 +293,15 @@ export const fetchFavorites = async (search: string = "") => {
   return favorites.map((favorite) => favorite.property);
 };
 
-export const fetchPropertyDetails = (id: string) => {
+export const fetchPropertyDetails = async (id: string) => {
+  // Delete expired bookings
+  await db.booking.deleteMany({
+    where: {
+      propertyId: id,
+      paymentStatus: false,
+      expiresAt: { lt: new Date() },
+    },
+  });
   return db.property.findUnique({
     where: {
       id,
@@ -302,7 +310,19 @@ export const fetchPropertyDetails = (id: string) => {
       profile: true,
       bookings: {
         where: {
-          paymentStatus: true,
+          OR: [
+            // Paid bookings
+            {
+              paymentStatus: true,
+            },
+            // Unpaid but NOT expired bookings
+            {
+              paymentStatus: false,
+              expiresAt: {
+                gt: new Date(),
+              },
+            },
+          ],
         },
         select: {
           profileId: true,
@@ -435,12 +455,6 @@ export const createBookingAction = async (prevState: {
   checkOut: Date;
 }): Promise<FormStateWithStatus> => {
   const user = await getAuthUser();
-  await db.booking.deleteMany({
-    where: {
-      profileId: user.id,
-      paymentStatus: false,
-    },
-  });
   let bookingId: null | string = null;
 
   const { propertyId, checkIn, checkOut } = prevState;
@@ -468,6 +482,7 @@ export const createBookingAction = async (prevState: {
         totalNights,
         profileId: user.id,
         propertyId,
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
       },
     });
     bookingId = booking.id;
