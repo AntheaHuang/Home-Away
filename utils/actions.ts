@@ -508,7 +508,9 @@ export const createBookingAction = async (prevState: {
         totalNights,
         profileId: user.id,
         propertyId,
-        expiresAt: new Date(Date.now() + 1 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+        // For quick testing
+        // expiresAt: new Date(Date.now() + 1 * 60 * 1000),
       },
     });
     bookingId = booking.id;
