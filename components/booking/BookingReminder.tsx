@@ -16,15 +16,11 @@ function BookingReminder() {
 
   async function fetchPendingBooking() {
     const res = await fetch("/api/has-pending-booking");
-    const pendingBookings: PendingBooking[] = await res.json();
+    const booking: PendingBooking = await res.json();
 
-    if (pendingBookings.length === 0) {
-      setPendingBooking(null);
-    } else {
-      // Only can have one pending booking
-      const booking = pendingBookings[0];
-      setPendingBooking(booking);
+    setPendingBooking(booking);
 
+    if (booking) {
       // Calculate remaining seconds
       const expiryTime = new Date(booking.expiresAt).getTime();
       setRemainingSeconds(Math.floor((expiryTime - Date.now()) / 1000));

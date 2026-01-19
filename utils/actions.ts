@@ -449,6 +449,25 @@ export const findExistingReview = async (
   });
 };
 
+export const hasPendingBooking = async () => {
+  const user = await getAuthUser();
+  // Delete expired bookings
+  await db.booking.deleteMany({
+    where: {
+      profileId: user.id,
+      paymentStatus: false,
+      expiresAt: { lt: new Date() },
+    },
+  });
+  const bookings = await db.booking.findFirst({
+    where: {
+      profileId: user.id,
+      paymentStatus: false,
+    },
+  });
+  return bookings;
+};
+
 export const createBookingAction = async (prevState: {
   propertyId: string;
   checkIn: Date;
@@ -468,6 +487,13 @@ export const createBookingAction = async (prevState: {
   if (!property) {
     return { message: "Property Not Found", status: "warning" };
   }
+
+  // can only have one pending booking at a time
+  const hasPending = await hasPendingBooking();
+  if (hasPending) {
+    return { message: "You still have a pending booking!", status: "warning" };
+  }
+
   const { orderTotal, totalNights } = calculateTotals({
     checkIn,
     checkOut,
@@ -482,7 +508,7 @@ export const createBookingAction = async (prevState: {
         totalNights,
         profileId: user.id,
         propertyId,
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+        expiresAt: new Date(Date.now() + 1 * 60 * 1000),
       },
     });
     bookingId = booking.id;
@@ -517,25 +543,6 @@ export const fetchBookings = async () => {
     },
     orderBy: {
       createdAt: "desc",
-    },
-  });
-  return bookings;
-};
-
-export const hasPendingBooking = async () => {
-  const user = await getAuthUser();
-  // Delete expired bookings
-  await db.booking.deleteMany({
-    where: {
-      profileId: user.id,
-      paymentStatus: false,
-      expiresAt: { lt: new Date() },
-    },
-  });
-  const bookings = await db.booking.findMany({
-    where: {
-      profileId: user.id,
-      paymentStatus: false,
     },
   });
   return bookings;
