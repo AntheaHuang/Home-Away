@@ -1,41 +1,41 @@
 "use client";
 
-import { hasPendingBooking } from "@/utils/actions";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-type pendingBooking = {
+type PendingBooking = {
   id: string;
-  expiresAt: Date;
+  expiresAt: string;
 };
+
 function BookingReminder() {
-  const [bookings, setBookings] = useState<pendingBooking[]>([]);
-  const [visible, setVisible] = useState(true);
+  const [pendingBooking, setPendingBooking] = useState<PendingBooking | null>(
+    null
+  );
   const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
 
-  async function fetchPendingBookings() {
-    const pendingBookings: pendingBooking[] = await hasPendingBooking();
+  async function fetchPendingBooking() {
+    const res = await fetch("/api/has-pending-booking");
+    const pendingBookings: PendingBooking[] = await res.json();
 
     if (pendingBookings.length === 0) {
-      setVisible(false);
+      setPendingBooking(null);
     } else {
-      setBookings(pendingBookings);
+      // Only can have one pending booking
+      const booking = pendingBookings[0];
+      setPendingBooking(booking);
 
-      // Use the earliest expiry for countdown
-      // Will avoid multiple pending bookings in future implementation
-      const earliestExpiry = Math.min(
-        ...pendingBookings.map((booking) => booking.expiresAt.getTime())
-      );
-      setRemainingSeconds(Math.floor((earliestExpiry - Date.now()) / 1000));
+      // Calculate remaining seconds
+      const expiryTime = new Date(booking.expiresAt).getTime();
+      setRemainingSeconds(Math.floor((expiryTime - Date.now()) / 1000));
     }
   }
-
   useEffect(() => {
-    fetchPendingBookings();
+    fetchPendingBooking();
 
-    // refetch every 5 seconds
+    // Refetch every 5 seconds
     const interval = setInterval(() => {
-      fetchPendingBookings();
+      fetchPendingBooking();
     }, 5000);
 
     return () => clearInterval(interval);
@@ -43,13 +43,14 @@ function BookingReminder() {
 
   // Countdown timer
   useEffect(() => {
-    if (!visible || remainingSeconds <= 0) return;
+    if (!pendingBooking || remainingSeconds <= 0) return;
 
     const interval = setInterval(() => {
       setRemainingSeconds((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          setVisible(false);
+          // Clear the pending booking when time runs out
+          setPendingBooking(null);
           return 0;
         }
         return prev - 1;
@@ -57,9 +58,9 @@ function BookingReminder() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [remainingSeconds, visible]);
+  }, [remainingSeconds, pendingBooking]);
 
-  if (!visible || bookings.length === 0) return null;
+  if (!pendingBooking) return null;
 
   const minutes = Math.floor(remainingSeconds / 60);
   const seconds = remainingSeconds % 60;
