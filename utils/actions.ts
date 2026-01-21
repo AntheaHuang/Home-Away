@@ -718,6 +718,12 @@ export const fetchReservations = async () => {
           country: true,
         },
       },
+      profile: {
+        select: {
+          firstName: true,
+          email: true,
+        },
+      },
     },
   });
   return reservations;

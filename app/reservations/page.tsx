@@ -36,6 +36,7 @@ export default async function ReservationsPage() {
               <TableHead>Total</TableHead>
               <TableHead>Check In</TableHead>
               <TableHead>Check Out</TableHead>
+              <TableHead>Contact Guest</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -43,6 +44,7 @@ export default async function ReservationsPage() {
               const { id, orderTotal, totalNights, checkIn, checkOut } =
                 reservation;
               const { id: propertyId, name, country } = reservation.property;
+              const { email, firstName } = reservation.profile;
 
               const startDate = formatDate(checkIn);
               const endDate = formatDate(checkOut);
@@ -63,6 +65,14 @@ export default async function ReservationsPage() {
                   <TableCell>{formatCurrency(orderTotal)}</TableCell>
                   <TableCell>{startDate}</TableCell>
                   <TableCell>{endDate}</TableCell>
+                  <TableCell>
+                    <Link
+                      href={`mailto:${email}?subject=About your reservation at ${name}`}
+                      className="underline text-primary tracking-wide"
+                    >
+                      Email {firstName}
+                    </Link>
+                  </TableCell>
                 </TableRow>
               );
             })}
