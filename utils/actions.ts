@@ -540,6 +540,7 @@ export const fetchBookings = async () => {
           id: true,
           name: true,
           country: true,
+          profile: true,
         },
       },
     },

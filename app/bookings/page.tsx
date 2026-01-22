@@ -38,6 +38,7 @@ async function BookingsPage() {
             <TableHead>Status</TableHead>
             <TableHead>Check In</TableHead>
             <TableHead>Check Out</TableHead>
+            <TableHead>Contact Property Owner</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -53,6 +54,8 @@ async function BookingsPage() {
               expiresAt,
             } = booking;
             const { id: propertyId, name, country } = booking.property;
+            const { email, firstName } = booking.property.profile;
+
             const startDate = formatDate(checkIn);
             const endDate = formatDate(checkOut);
             return (
@@ -77,6 +80,14 @@ async function BookingsPage() {
                 />
                 <TableCell>{startDate}</TableCell>
                 <TableCell>{endDate}</TableCell>
+                <TableCell>
+                  <Link
+                    href={`mailto:${email}?subject=Inquiry about ${name}`}
+                    className="underline text-primary tracking-wide"
+                  >
+                    Email {firstName}
+                  </Link>
+                </TableCell>
                 <TableCell>
                   <DeleteBooking bookingId={id} />
                 </TableCell>
