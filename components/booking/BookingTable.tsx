@@ -18,13 +18,9 @@ import FormContainer from "@/components/form/FormContainer";
 import { IconButton } from "@/components/form/Buttons";
 import { deleteBookingAction } from "@/utils/actions";
 import BookingStatusCell from "@/components/booking/BookingStatusCell";
-import { BookingTableInfo } from "@/utils/types";
+import { TableInfo } from "@/utils/types";
 
-export default function BookingTable({
-  bookings,
-}: {
-  bookings: BookingTableInfo[];
-}) {
+export default function BookingTable({ bookings }: { bookings: TableInfo[] }) {
   if (bookings.length === 0) {
     return;
   }
@@ -57,7 +53,7 @@ export default function BookingTable({
               expiresAt,
             } = booking;
             const { id: propertyId, name, country } = booking.property;
-            const { email, firstName } = booking.property.profile;
+            const { email, firstName } = booking.profile;
 
             const startDate = formatDate(checkIn);
             const endDate = formatDate(checkOut);

@@ -49,3 +49,24 @@ export type BookingTableInfo = {
     };
   };
 };
+
+export type TableInfo = {
+  id: string;
+  orderTotal: number;
+  totalNights: number;
+  checkIn: Date;
+  checkOut: Date;
+  paymentStatus: boolean;
+  expiresAt: Date;
+} & {
+  property: {
+    id: string;
+    name: string;
+    country: string;
+  };
+} & {
+  profile: {
+    firstName: string;
+    email: string;
+  };
+};

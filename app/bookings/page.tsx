@@ -1,10 +1,9 @@
 import { fetchBookings, deleteBookingAction } from "@/utils/actions";
 import BookingTable from "@/components/booking/BookingTable";
-import { BookingTableInfo } from "@/utils/types";
-import { TableCaption } from "@/components/ui/table";
+import { TableInfo } from "@/utils/types";
 
 async function BookingsPage() {
-  const bookings: BookingTableInfo[] = await fetchBookings();
+  const bookings: TableInfo[] = await fetchBookings();
 
   const activeBookings = bookings.filter(
     (booking) => new Date(booking.checkOut) >= new Date()
