@@ -720,7 +720,6 @@ export const fetchReservations = async () => {
         select: {
           id: true,
           name: true,
-          price: true,
           country: true,
         },
       },
