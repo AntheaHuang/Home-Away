@@ -25,7 +25,7 @@ export default async function ReservationsPage() {
         <h4 className="mb-4 capitalize">
           past reservations : {pastReservations.length}
         </h4>
-        <ReservationTable reservations={pastReservations} />
+        <ReservationTable reservations={pastReservations} isPast={true} />
       </div>
     </>
   );

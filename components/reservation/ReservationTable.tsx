@@ -7,7 +7,6 @@ import { formatDate, formatCurrency } from "@/utils/format";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -18,8 +17,10 @@ import { TableInfo } from "@/utils/types";
 
 export default function ReservationTable({
   reservations,
+  isPast,
 }: {
   reservations: TableInfo[];
+  isPast?: boolean;
 }) {
   if (reservations.length === 0) {
     return;
@@ -37,6 +38,7 @@ export default function ReservationTable({
             <TableHead>Check In</TableHead>
             <TableHead>Check Out</TableHead>
             <TableHead>Contact Guest</TableHead>
+            {isPast && <TableHead>Rate Your Guest</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -73,6 +75,16 @@ export default function ReservationTable({
                     Email {firstName}
                   </Link>
                 </TableCell>
+                {isPast && (
+                  <TableCell>
+                    <p
+                      // onClick={() => openReviewModal()}
+                      className="underline text-primary tracking-wide"
+                    >
+                      Leave a review for {firstName}
+                    </p>
+                  </TableCell>
+                )}
               </TableRow>
             );
           })}
