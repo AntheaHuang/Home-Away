@@ -53,7 +53,7 @@ export default function ReservationTable({
             const { id, orderTotal, totalNights, checkIn, checkOut } =
               reservation;
             const { id: propertyId, name, country } = reservation.property;
-            const { email, firstName } = reservation.profile;
+            const { email, firstName } = reservation.profile!;
 
             const startDate = formatDate(checkIn);
             const endDate = formatDate(checkOut);

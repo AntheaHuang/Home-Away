@@ -53,8 +53,7 @@ export default function BookingTable({ bookings }: { bookings: TableInfo[] }) {
               expiresAt,
             } = booking;
             const { id: propertyId, name, country } = booking.property;
-            const { email, firstName } =
-              booking.profile ?? booking.property.profile;
+            const { email, firstName } = booking.property.profile;
 
             const startDate = formatDate(checkIn);
             const endDate = formatDate(checkOut);
