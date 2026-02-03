@@ -30,26 +30,6 @@ export type Booking = {
   checkOut: Date;
 };
 
-export type BookingTableInfo = {
-  id: string;
-  orderTotal: number;
-  totalNights: number;
-  checkIn: Date;
-  checkOut: Date;
-  paymentStatus: boolean;
-  expiresAt: Date;
-} & {
-  property: {
-    id: string;
-    name: string;
-    country: string;
-    profile: {
-      firstName: string;
-      email: string;
-    };
-  };
-};
-
 export type TableInfo = {
   id: string;
   orderTotal: number;
@@ -58,15 +38,11 @@ export type TableInfo = {
   checkOut: Date;
   paymentStatus: boolean;
   expiresAt: Date;
-} & {
+  profile?: { firstName: string; email: string };
   property: {
     id: string;
     name: string;
     country: string;
-  };
-} & {
-  profile: {
-    firstName: string;
-    email: string;
+    profile: { firstName: string; email: string };
   };
 };

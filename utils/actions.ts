@@ -540,12 +540,12 @@ export const fetchBookings = async () => {
           id: true,
           name: true,
           country: true,
-        },
-      },
-      profile: {
-        select: {
-          firstName: true,
-          email: true,
+          profile: {
+            select: {
+              firstName: true,
+              email: true,
+            },
+          },
         },
       },
     },
@@ -721,6 +721,12 @@ export const fetchReservations = async () => {
           id: true,
           name: true,
           country: true,
+          profile: {
+            select: {
+              firstName: true,
+              email: true,
+            },
+          },
         },
       },
       profile: {
